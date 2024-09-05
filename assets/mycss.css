@@ -1,0 +1,8 @@
+[id^="input"] {
+    font-size: 40px;
+    text-align: center;
+    font-weight: bold;
+    
+    border-radius: 5px; 
+    border: 3px solid; 
+}

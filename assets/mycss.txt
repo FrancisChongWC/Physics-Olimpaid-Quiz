@@ -1,0 +1,8 @@
+#input1 {
+    font-size: 100px;
+    text-align: center;
+    font-weight: bold;
+    
+    border-radius: 50px; 
+    border: 10px solid; 
+}
