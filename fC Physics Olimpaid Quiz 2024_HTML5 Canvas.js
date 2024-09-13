@@ -23511,3 +23511,82 @@ an.handleFilterCache = function(event) {
 
 })(createjs = createjs||{}, AdobeAn = AdobeAn||{});
 var createjs, AdobeAn;
+
+var canvas, stage, exportRoot, anim_container, dom_overlay_container, fnStartAnimation;
+
+function init() {
+    canvas = document.getElementById("canvas");
+    anim_container = document.getElementById("animation_container");
+    dom_overlay_container = document.getElementById("dom_overlay_container");
+    var comp = AdobeAn.getComposition("F9679FA18362D746880DD525659BC832");
+    var lib = comp.getLibrary();
+    var loader = new createjs.LoadQueue(false);
+    loader.addEventListener("complete", function(evt) { handleComplete(evt, comp); });
+    loader.loadManifest(lib.properties.manifest);
+}
+
+function handleComplete(evt, comp) {
+    var lib = comp.getLibrary();
+    exportRoot = new lib.fCPhysicsOlimpaidQuiz2024_HTML5Canvas();
+    stage = new lib.Stage(canvas);
+
+    // Enable touch interactions for mobile devices
+    createjs.Touch.enable(stage);
+
+    stage.enableMouseOver();  // Ensures mouseover functionality for desktop
+    createjs.Ticker.framerate = lib.properties.fps;
+    createjs.Ticker.addEventListener("tick", stage);
+    stage.addChild(exportRoot);
+
+    // Start animation
+    fnStartAnimation = function() {
+        createjs.Ticker.addEventListener("tick", stage);
+    };
+
+    // Enable responsiveness
+    AdobeAn.makeResponsive(true, 'both', true, 1, [canvas, anim_container, dom_overlay_container]);
+    AdobeAn.compositionLoaded(lib.properties.id);
+    fnStartAnimation();
+
+    // Add drag-and-drop functionality to objects
+    addDragAndDrop(exportRoot);
+
+    // Add hover (mouseover and touchstart) functionality
+    addHoverEffects(exportRoot);
+}
+
+function addDragAndDrop(root) {
+    // Example: Apply drag-and-drop to an object in the root
+    var draggableObject = root.someObject;  // Replace with actual object reference
+
+    draggableObject.on("pressmove", function(event) {
+        event.target.x = event.stageX;
+        event.target.y = event.stageY;
+        stage.update();  // Update the stage after position change
+    });
+
+    draggableObject.on("pressup", function(event) {
+        console.log("Object dropped at: ", event.stageX, event.stageY);
+    });
+}
+
+function addHoverEffects(root) {
+    // Example: Apply hover effect on an object
+    var hoverObject = root.someTextObject;  // Replace with the actual object that needs hover
+
+    // Mouseover for desktop
+    hoverObject.on("mouseover", function(event) {
+        showText(event.target);
+    });
+
+    // Touchstart for mobile devices
+    hoverObject.on("touchstart", function(event) {
+        showText(event.target);
+    });
+
+    // Function to display text when hovered or touched
+    function showText(target) {
+        target.text = "You are hovering over me!";
+        stage.update();
+    }
+}
